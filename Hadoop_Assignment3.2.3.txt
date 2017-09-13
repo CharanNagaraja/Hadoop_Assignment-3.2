@@ -1,0 +1,25 @@
+package tvSales;
+
+import java.io.IOException;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
+
+public class TvSalesReducer extends Reducer<IntWritable, Text, NullWritable, Text> {
+
+	//reduce method is called for each <key, (collection of values)> in the sorted inputs
+
+	public void reduce(IntWritable Key, Iterable<Text> outputRecords, Context context)
+			throws IOException, InterruptedException {
+		
+		
+		
+		for(Text records : outputRecords){
+			context.write(NullWritable.get(), records);
+		}
+		
+	}
+}

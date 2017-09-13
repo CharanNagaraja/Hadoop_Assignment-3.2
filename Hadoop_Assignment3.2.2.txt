@@ -1,0 +1,36 @@
+package tvvfilter;
+
+import java.io.IOException;
+
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class tvmapper1 extends Mapper<LongWritable,Text,IntWritable,Text>{
+
+	
+	/*
+	 * Maps are the individual tasks which transform input records into a intermediate records
+	 * It takes input key as byteOffset ,since the default input and output format is TextInputFormat and TextOutputFormat respectively
+	 * It takes value as the entire line
+	 * This is called for each key/value pair in the InputSplit
+	 */
+    public void map(LongWritable inputKey, Text inputValue,Context context) throws IOException, InterruptedException{
+    	
+        if(isBadRecord(inputValue)==false)
+        context.write(new IntWritable(1), inputValue);
+    }
+    
+  
+    private boolean isBadRecord(Text record){
+        String[] lineArray= record.toString().split("\\|");//Splitting the line using separator |
+        System.out.println(lineArray[0]); //Storing comapnyName 
+        System.out.println(lineArray[1]);//Storing product name
+        if ( (lineArray[0].equals("NA")) || (lineArray[1].equals("NA")) )//check if Company name and product name contains bad records "NA"
+            return true;
+        else
+            return false; //returns false if does not contain bad records
+        
+    }
+}
